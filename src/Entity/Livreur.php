@@ -6,7 +6,13 @@ use App\Entity\Gestionnaire;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\LivreurRepository;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+
+#[ApiResource(
+    normalizationContext: ["groups" => ["Livreur:read"]],
+    denormalizationContext: ["groups" => ["Livreur:write"]]
+)]
 
 #[ORM\Entity(repositoryClass: LivreurRepository::class)]
 class Livreur extends User

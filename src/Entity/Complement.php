@@ -2,52 +2,96 @@
 
 namespace App\Entity;
 
-use App\Repository\ComplementRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ComplementRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+#[ApiResource]
 
-#[ORM\Entity(repositoryClass: ComplementRepository::class)]
+// #[ORM\Entity(repositoryClass: ComplementRepository::class)]
 class Complement
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    // #[ORM\Id]
+    // #[ORM\GeneratedValue]
+    // #[ORM\Column(type: 'integer')]
     private $id;
+    private $tailles;
+    private $portionFrites;
 
-    #[ORM\ManyToMany(targetEntity: Menu::class, inversedBy: 'complements')]
-    private $menus;
+    // #[ORM\ManyToMany(targetEntity: Menu::class, inversedBy: 'complements')]
+    // private $menus;
 
-    public function __construct()
-    {
-        $this->menus = new ArrayCollection();
-    }
+    // public function __construct()
+    // {
+    //     $this->menus = new ArrayCollection();
+    // }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    // /**
+    //  * @return Collection<int, Menu>
+    //  */
+    // public function getMenus(): Collection
+    // {
+    //     return $this->menus;
+    // }
+
+    // public function addMenu(Menu $menu): self
+    // {
+    //     if (!$this->menus->contains($menu)) {
+    //         $this->menus[] = $menu;
+    //     }
+
+    //     return $this;
+    // }
+
+    // public function removeMenu(Menu $menu): self
+    // {
+    //     $this->menus->removeElement($menu);
+
+    //     return $this;
+    // }
+
     /**
-     * @return Collection<int, Menu>
-     */
-    public function getMenus(): Collection
+     * Get the value of tailles
+     */ 
+    public function getTailles()
     {
-        return $this->menus;
+        return $this->tailles;
     }
 
-    public function addMenu(Menu $menu): self
+    /**
+     * Set the value of tailles
+     *
+     * @return  self
+     */ 
+    public function setTailles($tailles)
     {
-        if (!$this->menus->contains($menu)) {
-            $this->menus[] = $menu;
-        }
+        $this->tailles = $tailles;
 
         return $this;
     }
 
-    public function removeMenu(Menu $menu): self
+    /**
+     * Get the value of portionFrites
+     */ 
+    public function getPortionFrites()
     {
-        $this->menus->removeElement($menu);
+        return $this->portionFrites;
+    }
+
+    /**
+     * Set the value of portionFrites
+     *
+     * @return  self
+     */ 
+    public function setPortionFrites($portionFrites)
+    {
+        $this->portionFrites = $portionFrites;
 
         return $this;
     }

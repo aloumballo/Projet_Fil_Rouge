@@ -30,10 +30,22 @@ class AppFixtures extends Fixture
             $user1,
             'passer'
         );
+
+        // $user2 = new User();
+        // $user2->setEmail('client2@gmail.com');
+        // $hashedPassword = $this->passwordHasher->hashPassword(
+        //     $user2,
+        //     'passer'
+        // );
+        // $user2->setPassword($hashedPassword);
+        // $user2->setRoles(['ROLE_CLIENT']);
+
+
         $user1->setPassword($hashedPassword);
         $user1->setRoles(['ROLE_GESTIONNAIRE']);
         $manager->persist($user);
         $manager->persist($user1);
+        // $manager->persist($user2);
         $manager->flush();
     }
 }

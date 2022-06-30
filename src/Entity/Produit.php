@@ -2,41 +2,57 @@
 
 namespace App\Entity;
 
-use App\Repository\ProduitRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Menu;
+use App\Entity\Burger;
+use App\Entity\Boisson;
+use App\Entity\Commande;
+use App\Entity\PortionFrite;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ProduitRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
-
+#[ApiResource]
 
 #[ORM\Entity(repositoryClass: ProduitRepository::class)]
 
-#[ORM\Table(name: '`produit`')]
+#[ORM\Table(name: 'produit')]
 #[ORM\InheritanceType("JOINED")]
 #[ORM\DiscriminatorColumn(name: "type", type: "string")]
-#[ORM\DiscriminatorMap(["produit" => Produit::class, "burger" => Burger::class, "menu" => Menu::class, "boisson" => Boisson::class, "portionFrite" => PortionFrite::class])]
+#[ORM\DiscriminatorMap([
+    "produit" => Produit::class,
+    "burger" => Burger::class,
+    "menu" => Menu::class,
+    "boisson" => Boisson::class,
+    "portionFrite" => PortionFrite::class
+])]
 class Produit
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['Burger:read:simple'])]
     protected $id;
 
     #[ORM\Column(type: 'string', length: 20)]
+    #[Groups(['Burger:read:simple', 'Burger:write:simple', 'Burger:read:all'])]
     protected $nom;
 
-    #[ORM\Column(type: 'string', length: 20)]
+    #[ORM\Column(type: 'string', length: 20, nullable: true)]
+    #[Groups(['Burger:read:simple', 'Burger:write:simple', 'Burger:read:all'])]
     protected $image;
 
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Groups(['Burger:read:simple', 'Burger:write:simple', 'Burger:read:all'])]
     protected $prix;
-
-
 
     #[ORM\ManyToMany(targetEntity: Commande::class, mappedBy: 'produits')]
     private $commandes;
 
     #[ORM\Column(type: 'boolean')]
+    #[Groups(['Burger:read:all'])]
     protected $isEtat;
 
     public function __construct()

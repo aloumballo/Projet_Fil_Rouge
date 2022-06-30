@@ -6,7 +6,15 @@ use App\Entity\Gestionnaire;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ClientRepository;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+
+#[ApiResource]
+// (
+//     normalizationContext: ["groups" => ["user:read"]],
+//     denormalizationContext: ["groups" => ["user:write"]]
+// )]
+
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 class Client extends User
@@ -27,6 +35,7 @@ class Client extends User
     public function __construct()
     {
         $this->commandes = new ArrayCollection();
+        $this->setRoles(["ROLE_CLIENT"]);
     }
 
     // public function getId(): ?int
