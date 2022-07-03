@@ -53,13 +53,11 @@ class Burger extends Produit
     #[ORM\ManyToMany(targetEntity: Menu::class, inversedBy: 'burgers')]
     private $menus;
 
-    #[Groups(["Burger:read:simple", "Burger:write:simple", "Burger:read:all"])]
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'burgers')]
-    private $user;
-
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'burgers')]
     #[Groups(["Burger:read:simple", "Burger:write:simple", "Burger:read:all"])]
     private $gestionnaire;
+
+
 
     /* #[ORM\ManyToOne(targetEntity: Catalogue::class, inversedBy: 'burgers')]
     private $catalogue; */
@@ -128,18 +126,6 @@ class Burger extends Produit
     }
  */
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
     public function getGestionnaire(): ?Gestionnaire
     {
         return $this->gestionnaire;
@@ -151,4 +137,8 @@ class Burger extends Produit
 
         return $this;
     }
+
+
+
+   
 }

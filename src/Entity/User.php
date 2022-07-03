@@ -70,13 +70,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[SerializedName("password")]
     private $PleinPassword;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Burger::class)]
-    private $burgers;
+   
     public function __construct()
     {
         $this->isEnable = "false";
         $this->generateToken();
-        $this->burgers = new ArrayCollection();
     }
     public function generateToken()
     {
@@ -262,33 +260,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Burger>
-     */
-    public function getBurgers(): Collection
-    {
-        return $this->burgers;
-    }
-
-    public function addBurger(Burger $burger): self
-    {
-        if (!$this->burgers->contains($burger)) {
-            $this->burgers[] = $burger;
-            $burger->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBurger(Burger $burger): self
-    {
-        if ($this->burgers->removeElement($burger)) {
-            // set the owning side to null (unless already changed)
-            if ($burger->getUser() === $this) {
-                $burger->setUser(null);
-            }
-        }
-
-        return $this;
-    }
+   
 }
