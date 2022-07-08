@@ -33,31 +33,38 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['Burger:read:simple'])]
+    #[Groups(['Burger:read:simple','Burger:read:all','write', 's:write'])]
     protected $id;
 
-    #[ORM\Column(type: 'string', length: 20)]
-    #[Groups(['Burger:read:simple', 'Burger:write:simple', 'Burger:read:all'])]
+    #[ORM\Column(type: 'string', length: 20,nullable:true)]
+    #[Groups(['Burger:read:simple', 'write', 'Burger:read:all', 's:write'])]
     protected $nom;
 
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
-    #[Groups(['Burger:read:simple', 'Burger:write:simple', 'Burger:read:all'])]
+    // #[Groups(['Burger:read:simple', 'Burger:write:simple', 'Burger:read:all','s:write'])]
     protected $image;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups(['Burger:read:simple', 'Burger:write:simple', 'Burger:read:all'])]
+    #[Groups(['Burger:read:simple', 'write', 'Burger:read:all', 's:write'])]
     protected $prix;
 
-    #[ORM\ManyToMany(targetEntity: Commande::class, mappedBy: 'produits')]
-    private $commandes;
+    // #[ORM\ManyToMany(targetEntity: Commande::class, mappedBy: 'produits')]
+    // private $commandes;
 
     #[ORM\Column(type: 'boolean')]
-    #[Groups(['Burger:read:all'])]
-    protected $isEtat;
+    #[Groups(['Burger:read:simple'])]
+    protected $isEtat=true;
+
+    #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'produits')]
+    private $gestionnaire;
+
+    // #[ORM\OneToMany(mappedBy: 'produit', targetEntity: ProduitCommande::class)]
+    // private $produitCommandes;
 
     public function __construct()
     {
         $this->commandes = new ArrayCollection();
+       // $this->produitCommandes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -106,29 +113,29 @@ class Produit
     /**
      * @return Collection<int, Commande>
      */
-    public function getCommandes(): Collection
-    {
-        return $this->commandes;
-    }
+    // public function getCommandes(): Collection
+    // {
+    //     return $this->commandes;
+    // }
 
-    public function addCommande(Commande $commande): self
-    {
-        if (!$this->commandes->contains($commande)) {
-            $this->commandes[] = $commande;
-            $commande->addProduit($this);
-        }
+    // public function addCommande(Commande $commande): self
+    // {
+    //     if (!$this->commandes->contains($commande)) {
+    //         $this->commandes[] = $commande;
+    //         $commande->addProduit($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeCommande(Commande $commande): self
-    {
-        if ($this->commandes->removeElement($commande)) {
-            $commande->removeProduit($this);
-        }
+    // public function removeCommande(Commande $commande): self
+    // {
+    //     if ($this->commandes->removeElement($commande)) {
+    //         $commande->removeProduit($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function isIsEtat(): ?bool
     {
@@ -141,4 +148,46 @@ class Produit
 
         return $this;
     }
+
+    public function getGestionnaire(): ?Gestionnaire
+    {
+        return $this->gestionnaire;
+    }
+
+    public function setGestionnaire(?Gestionnaire $gestionnaire): self
+    {
+        $this->gestionnaire = $gestionnaire;
+
+        return $this;
+    }
+
+    // /**
+    //  * @return Collection<int, ProduitCommande>
+    //  */
+    // public function getProduitCommandes(): Collection
+    // {
+    //     return $this->produitCommandes;
+    // }
+
+    // public function addProduitCommande(ProduitCommande $produitCommande): self
+    // {
+    //     if (!$this->produitCommandes->contains($produitCommande)) {
+    //         $this->produitCommandes[] = $produitCommande;
+    //         $produitCommande->setProduit($this);
+    //     }
+
+    //     return $this;
+    // }
+
+    // public function removeProduitCommande(ProduitCommande $produitCommande): self
+    // {
+    //     if ($this->produitCommandes->removeElement($produitCommande)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($produitCommande->getProduit() === $this) {
+    //             $produitCommande->setProduit(null);
+    //         }
+    //     }
+
+    //     return $this;
+    // }
 }

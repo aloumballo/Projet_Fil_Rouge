@@ -3,11 +3,12 @@
 namespace App\Entity;
 
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\Response;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\SerializedName;
@@ -23,16 +24,42 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 #[ORM\DiscriminatorColumn(name: "type", type: "string")]
 #[ORM\DiscriminatorMap(["user" => User::class, "livreur" => Livreur::class, "gestionnaire" => Gestionnaire::class, "client" => Client::class])]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    collectionOperations: [
+        "get" => [
+            'method' => 'get',
+            'path' => '/users',
+            'status' => Response::HTTP_OK,
+            'normalization_context' => ['groups' => ["User:read:simple"]],
+
+        ],
+        "post" => [
+            'denormalization_context' => ['groups' => ["User:write"]],
+
+        ]
+    ],
+
+    itemOperations: [
+        "put" => [
+            "security" => "is_granted('ROLE_GESTIONNAIRE')",
+            "security" => "Vous n'avez pas access à cette Ressource",
+        ],
+        "get" => [
+            'method' => 'get',
+            'status' => Response::HTTP_OK,
+            'normalization_context' => ['groups' => ['User:read:all']],
+        ]
+    ]
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['User:read:simple', 'User:write:simple', 'Burger:read:all'])]
+    #[Groups(['User:read:simple','Burger:read:all', 'write', "Burger:read:simple"])]
     protected $id;
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Groups(['User:read:simple', 'User:write:simple', 'Burger:read:all'])]
+    #[Groups(['User:read:simple', 'User:write:simple', 'Burger:read:all', "Burger:read:simple"])]
     protected $email;
     #[ORM\Column(type: 'json')]
     #[Groups(['User:read:simple', 'User:write:simple'])]
@@ -40,18 +67,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string')]
     protected $password;
     #[ORM\Column(type: 'string', length: 20)]
-    #[Groups(['User:read:simple', 'User:write:simple'])]
+    #[Groups(['User:read:simple', 'User:write:simple', "Burger:read:simple"])]
     private $nom;
     #[ORM\Column(type: 'string', length: 20)]
-    #[Groups(['User:read:simple', 'User:write:simple'])]
+    #[Groups(['User:read:simple', 'User:write:simple', "Burger:read:simple"])]
     private $prenom;
 
     #[ORM\Column(type: 'string', length: 40, nullable: true)]
-    #[Groups(['User:read:simple', 'User:write:simple'])]
+    #[Groups(['User:read:simple', 'User:write:simple', "Burger:read:simple"])]
     private $adresse;
 
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
-    #[Groups(['User:read:simple', 'User:write:simple'])]
+    #[Groups(['User:read:simple', 'User:write:simple', "Burger:read:simple"])]
     private $telephone;
 
     #[ORM\Column(type: 'boolean', nullable: true)]
@@ -70,7 +97,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[SerializedName("password")]
     private $PleinPassword;
 
-   
+
     public function __construct()
     {
         $this->isEnable = "false";
@@ -259,6 +286,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-   
 }

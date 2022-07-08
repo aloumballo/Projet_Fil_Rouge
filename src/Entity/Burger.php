@@ -12,7 +12,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BurgerRepository::class)]
-
 #[ApiResource(
     collectionOperations: [
         "get" => [
@@ -20,15 +19,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'path' => '/burgers',
             'status' => Response::HTTP_OK,
             'normalization_context' => ['groups' => ["Burger:read:simple"]],
-            'denormalization_context' => ['groups' => ["Burger:write:simple"]],
+
         ],
-        "post"
+        "post" => [
+            "security" => "is_granted('ROLE_GESTIONNAIRE')",
+
+            "security_message" => "Vous n'avez pas access à cette Ressource",
+            'normalization_context' => ['groups' => ["Burger:read:simple"]],
+            'denormalization_context' => ['groups' => ['s:write']]
+       
+        ]
     ],
 
     itemOperations: [
         "put" => [
+
             "security" => "is_granted('ROLE_GESTIONNAIRE')",
-            "security" => "Vous n'avez pas access à cette Ressource",
+
+            "security_message" => "Vous n'avez pas access à cette Ressource",
         ],
         "get" => [
             'method' => 'get',
@@ -44,18 +52,22 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 class Burger extends Produit
 {
-    #[Groups(["Burger:read:simple"])]
+    // #[Groups(["Burger:read:simple"])]
     // #[ORM\Id]
     // #[ORM\GeneratedValue]
     // #[ORM\Column(type: 'integer')]
     // // protected $id;
 
-    #[ORM\ManyToMany(targetEntity: Menu::class, inversedBy: 'burgers')]
-    private $menus;
+    // #[ORM\ManyToMany(targetEntity: Menu::class, inversedBy: 'burgers')]
+    // // #[Groups(["Burger:read:simple", "Burger:write:simple", "Burger:read:all"])]
+    // private $menus;
 
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'burgers')]
-    #[Groups(["Burger:read:simple", "Burger:write:simple", "Burger:read:all"])]
+    #[Groups(["Burger:read:all", "s:write", "Burger:read:simple"])]
     private $gestionnaire;
+
+    #[ORM\OneToMany(mappedBy: 'burger', targetEntity: MenuBurgers::class)]
+    private $menuBurgers;
 
 
 
@@ -70,6 +82,7 @@ class Burger extends Produit
     public function __construct()
     {
         $this->menus = new ArrayCollection();
+        $this->menuBurgers = new ArrayCollection();
     }
 
     // public function getId(): ?int
@@ -77,29 +90,29 @@ class Burger extends Produit
     //     return $this->id;
     // }
 
-    /**
-     * @return Collection<int, Menu>
-     */
-    public function getMenus(): Collection
-    {
-        return $this->menus;
-    }
+    // /**
+    //  * @return Collection<int, Menu>
+    //  */
+    // public function getMenus(): Collection
+    // {
+    //     return $this->menus;
+    // }
 
-    public function addMenu(Menu $menu): self
-    {
-        if (!$this->menus->contains($menu)) {
-            $this->menus[] = $menu;
-        }
+    // public function addMenu(Menu $menu): self
+    // {
+    //     if (!$this->menus->contains($menu)) {
+    //         $this->menus[] = $menu;
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeMenu(Menu $menu): self
-    {
-        $this->menus->removeElement($menu);
+    // public function removeMenu(Menu $menu): self
+    // {
+    //     $this->menus->removeElement($menu);
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     // public function getTest(): ?string
     // {
@@ -138,7 +151,33 @@ class Burger extends Produit
         return $this;
     }
 
+    /**
+     * @return Collection<int, MenuBurgers>
+     */
+    public function getMenuBurgers(): Collection
+    {
+        return $this->menuBurgers;
+    }
 
+    public function addMenuBurger(MenuBurgers $menuBurger): self
+    {
+        if (!$this->menuBurgers->contains($menuBurger)) {
+            $this->menuBurgers[] = $menuBurger;
+            $menuBurger->setBurger($this);
+        }
 
-   
+        return $this;
+    }
+
+    public function removeMenuBurger(MenuBurgers $menuBurger): self
+    {
+        if ($this->menuBurgers->removeElement($menuBurger)) {
+            // set the owning side to null (unless already changed)
+            if ($menuBurger->getBurger() === $this) {
+                $menuBurger->setBurger(null);
+            }
+        }
+
+        return $this;
+    }
 }

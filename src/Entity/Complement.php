@@ -7,14 +7,15 @@ use App\Repository\ComplementRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+
 #[ApiResource]
 
 // #[ORM\Entity(repositoryClass: ComplementRepository::class)]
 class Complement
 {
-    // #[ORM\Id]
-    // #[ORM\GeneratedValue]
-    // #[ORM\Column(type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
     private $tailles;
     private $portionFrites;
@@ -58,7 +59,7 @@ class Complement
 
     /**
      * Get the value of tailles
-     */ 
+     */
     public function getTailles()
     {
         return $this->tailles;
@@ -68,7 +69,7 @@ class Complement
      * Set the value of tailles
      *
      * @return  self
-     */ 
+     */
     public function setTailles($tailles)
     {
         $this->tailles = $tailles;
@@ -78,7 +79,7 @@ class Complement
 
     /**
      * Get the value of portionFrites
-     */ 
+     */
     public function getPortionFrites()
     {
         return $this->portionFrites;
@@ -88,7 +89,7 @@ class Complement
      * Set the value of portionFrites
      *
      * @return  self
-     */ 
+     */
     public function setPortionFrites($portionFrites)
     {
         $this->portionFrites = $portionFrites;
