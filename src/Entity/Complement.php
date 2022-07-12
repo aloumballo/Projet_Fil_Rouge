@@ -96,4 +96,13 @@ class Complement
 
         return $this;
     }
+    // #[Assert\Callback]
+    // public function validate(ExecutionContextInterface $context, $payload)
+    // {
+
+    //     if (count($this->getMenuTailles()) == 0 && count($this->getMenuPortionFrites()) == 0) {
+    //         $context->buildViolation('saisir au moins un complement')
+    //         ->addViolation();
+    //     }
+    // }
 }

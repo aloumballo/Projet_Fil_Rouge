@@ -10,6 +10,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ApiResource(
     
@@ -45,14 +46,13 @@ class Menu extends Produit
     #[Assert\Count(
         min: 1,
         //max: 5,
-        minMessage: 'You must specify at least one email',
-        //maxMessage: 'You cannot specify more than {{ limit }} emails',
+        minMessage: 'Au moins un burger !!!'
     )]
-
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBurgers::class,cascade:["persist"])]
     #[Groups(["write"])]
      private $menuBurgers;
 
+    #[Assert\Valid()]
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuTaille::class,cascade: ["persist"])]
     #[Groups(["write"])]
     private $menuTailles;
@@ -281,5 +281,15 @@ class Menu extends Produit
         $this->gestionnaire = $gestionnaire;
 
         return $this;
+    }
+
+    #[Assert\Callback]
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+
+        if (count($this->getMenuTailles())==0 && count($this->getMenuPortionFrites()) == 0) {
+            $context->buildViolation('saisir au moins un complement')
+                 ->addViolation();
+        }
     }
 }

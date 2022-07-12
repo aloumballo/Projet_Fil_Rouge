@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\MenuTailleRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ApiResource(
 
@@ -36,6 +38,9 @@ class MenuTaille
     #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuTailles',cascade: ["persist"])]
     private $menu;
 
+    #[Assert\Positive(
+        message: 'la quantite doit etre positive wane'
+    )]
     #[ORM\Column(type: 'integer')]
     #[Groups(["wr", "write"])]
     private $quantite;
