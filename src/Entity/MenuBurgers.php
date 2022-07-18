@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\MenuBurgersRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ApiResource(
 
@@ -26,6 +28,10 @@ class MenuBurgers
     #[Groups(["Burger:read:all", "write", "Burger:read:simple"])]
     private $id;
 
+
+    #[Assert\Positive(
+        message: 'la quantite doit etre positive wane'
+    )]
     #[ORM\Column(type: 'integer')]
     #[Groups(["Burger:read:all", "write", "Burger:read:simple"])]
     private $quantite;

@@ -19,7 +19,6 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 //     denormalizationContext: ["groups" => ["user:write"]]
 // )]
 
-#[ORM\Table(name: 'user')]
 #[ORM\InheritanceType("JOINED")]
 #[ORM\DiscriminatorColumn(name: "type", type: "string")]
 #[ORM\DiscriminatorMap(["user" => User::class, "livreur" => Livreur::class, "gestionnaire" => Gestionnaire::class, "client" => Client::class])]
@@ -56,7 +55,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['User:read:simple','Burger:read:all', 'write', "Burger:read:simple"])]
+    #[Groups(['User:read:simple', 'Burger:read:all', 'write', "Burger:read:simple", 'Produitt'])]
     protected $id;
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     #[Groups(['User:read:simple', 'User:write:simple', 'Burger:read:all', "Burger:read:simple"])]
@@ -64,22 +63,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'json')]
     #[Groups(['User:read:simple', 'User:write:simple'])]
     protected $roles = [];
+
     #[ORM\Column(type: 'string')]
     protected $password;
+
     #[ORM\Column(type: 'string', length: 20)]
     #[Groups(['User:read:simple', 'User:write:simple', "Burger:read:simple"])]
-    private $nom;
+    private $nom = "alou";
+
     #[ORM\Column(type: 'string', length: 20)]
     #[Groups(['User:read:simple', 'User:write:simple', "Burger:read:simple"])]
-    private $prenom;
+    private $prenom = "mballo";
 
     #[ORM\Column(type: 'string', length: 40, nullable: true)]
     #[Groups(['User:read:simple', 'User:write:simple', "Burger:read:simple"])]
-    private $adresse;
+    private $adresse = "guediawaye";
 
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
     #[Groups(['User:read:simple', 'User:write:simple', "Burger:read:simple"])]
-    private $telephone;
+    private $telephone = "774154533";
 
     #[ORM\Column(type: 'boolean', nullable: true)]
     private $isEtat;
@@ -96,6 +98,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     // #[ORM\Column(type: 'string', length: 255)]
     #[SerializedName("password")]
     private $PleinPassword;
+
+
 
 
     public function __construct()

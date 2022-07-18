@@ -3,7 +3,10 @@
 
 namespace App\DataPersister;
 
+use App\Entity\Menu;
 use App\Entity\User;
+use App\Entity\Burger;
+use App\Entity\Produit;
 use App\Service\SendEmail;
 use Doctrine\ORM\EntityManagerInterface;
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
@@ -25,7 +28,7 @@ class PersisterData implements ContextAwareDataPersisterInterface
     ) {
         $this->_entityManager = $entityManager;
         $this->_passwordEncoder = $passwordEncoder;
-        $this->send=$send;
+        $this->send = $send;
     }
 
     /**
@@ -33,7 +36,7 @@ class PersisterData implements ContextAwareDataPersisterInterface
      */
     public function supports($data, array $context = []): bool
     {
-        return $data instanceof User;
+        return $data instanceof User or $data instanceof Produit;
     }
 
     /**
@@ -41,20 +44,33 @@ class PersisterData implements ContextAwareDataPersisterInterface
      */
     public function persist($data, array $context = [])
     {
-        if ($data->getPleinPassword()) {
-            $data->setPassword(
-                $this->_passwordEncoder->hashPassword(
-                    $data,
-                    $data->getPleinPassword()
-                )
-            );
-            $data->eraseCredentials();
+
+       // dd($data);
+        if ($data instanceof User) {
+            if ($data->getPleinPassword()) {
+                $data->setPassword(
+                    $this->_passwordEncoder->hashPassword(
+                        $data,
+                        $data->getPleinPassword()
+                    )
+                );
+                $data->eraseCredentials();
+            }
+            $this->send->email($data);
         }
+
+        if ($data instanceof Produit or $data instanceof Menu) {
+
+
+            $data->setImage(\file_get_contents($data->getImageFile()));
+        }
+
 
         $this->_entityManager->persist($data);
         $this->_entityManager->flush();
-        $this->send->email($data);
     }
+
+
 
     /**
      * {@inheritdoc}

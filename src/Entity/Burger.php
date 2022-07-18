@@ -26,8 +26,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
             "security_message" => "Vous n'avez pas access à cette Ressource",
             'normalization_context' => ['groups' => ["Burger:read:simple"]],
-            'denormalization_context' => ['groups' => ['s:write']]
-       
+            'denormalization_context' => ['groups' => ['s:write', 'Produitt']]
+
         ]
     ],
 
@@ -63,11 +63,17 @@ class Burger extends Produit
     // private $menus;
 
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'burgers')]
-    #[Groups(["Burger:read:all", "s:write", "Burger:read:simple"])]
+    #[Groups(["Burger:read:all", "s:write", "Burger:read:simple", 'Produitt'])]
     private $gestionnaire;
 
     #[ORM\OneToMany(mappedBy: 'burger', targetEntity: MenuBurgers::class)]
     private $menuBurgers;
+
+    #[ORM\ManyToOne(targetEntity: CommandeBurger::class, inversedBy: 'burgers')]
+    private $commandeBurger;
+
+    #[ORM\OneToMany(mappedBy: 'burger', targetEntity: CommandeBurger::class)]
+    private $commandeBurgers;
 
 
 
@@ -83,6 +89,7 @@ class Burger extends Produit
     {
         $this->menus = new ArrayCollection();
         $this->menuBurgers = new ArrayCollection();
+        $this->commandeBurgers = new ArrayCollection();
     }
 
     // public function getId(): ?int
@@ -175,6 +182,48 @@ class Burger extends Produit
             // set the owning side to null (unless already changed)
             if ($menuBurger->getBurger() === $this) {
                 $menuBurger->setBurger(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getCommandeBurger(): ?CommandeBurger
+    {
+        return $this->commandeBurger;
+    }
+
+    public function setCommandeBurger(?CommandeBurger $commandeBurger): self
+    {
+        $this->commandeBurger = $commandeBurger;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CommandeBurger>
+     */
+    public function getCommandeBurgers(): Collection
+    {
+        return $this->commandeBurgers;
+    }
+
+    public function addCommandeBurger(CommandeBurger $commandeBurger): self
+    {
+        if (!$this->commandeBurgers->contains($commandeBurger)) {
+            $this->commandeBurgers[] = $commandeBurger;
+            $commandeBurger->setBurger($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommandeBurger(CommandeBurger $commandeBurger): self
+    {
+        if ($this->commandeBurgers->removeElement($commandeBurger)) {
+            // set the owning side to null (unless already changed)
+            if ($commandeBurger->getBurger() === $this) {
+                $commandeBurger->setBurger(null);
             }
         }
 

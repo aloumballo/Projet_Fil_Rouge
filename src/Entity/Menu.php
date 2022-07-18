@@ -48,6 +48,7 @@ class Menu extends Produit
         //max: 5,
         minMessage: 'Au moins un burger !!!'
     )]
+    #[Assert\Valid()]
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBurgers::class,cascade:["persist"])]
     #[Groups(["write"])]
      private $menuBurgers;
@@ -63,6 +64,15 @@ class Menu extends Produit
 
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'menus')]
     private $gestionnaire;
+
+    //  #[ORM\ManyToOne(targetEntity: CommandeMenu::class, inversedBy: 'menus')]
+    //  private $commandeMenu;
+    
+    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: CommandeMenu::class)]
+    private $commandeMenus;
+
+    // #[ORM\ManyToOne(targetEntity: Commande::class, inversedBy: 'menus')]
+    // private $commande;
 
     /* #[ORM\ManyToOne(targetEntity: Catalogue::class, inversedBy: 'menus')]
     private $catalogue; */
@@ -81,6 +91,7 @@ class Menu extends Produit
         $this->menuBurgers = new ArrayCollection();
         $this->menuTailles = new ArrayCollection();
         $this->menuPortionFrites = new ArrayCollection();
+        $this->commandeMenus = new ArrayCollection();
 
 
        
@@ -291,5 +302,59 @@ class Menu extends Produit
             $context->buildViolation('saisir au moins un complement')
                  ->addViolation();
         }
+    }
+
+    // public function getCommande(): ?Commande
+    // {
+    //     return $this->commande;
+    // }
+
+    // public function setCommande(?Commande $commande): self
+    // {
+    //     $this->commande = $commande;
+
+    //     return $this;
+    // }
+
+    // public function getCommandeMenu(): ?CommandeMenu
+    // {
+    //     return $this->commandeMenu;
+    // }
+
+    // public function setCommandeMenu(?CommandeMenu $commandeMenu): self
+    // {
+    //     $this->commandeMenu = $commandeMenu;
+
+    //     return $this;
+    // }
+
+    /**
+     * @return Collection<int, CommandeMenu>
+     */
+    public function getCommandeMenus(): Collection
+    {
+        return $this->commandeMenus;
+    }
+
+    public function addCommandeMenu(CommandeMenu $commandeMenu): self
+    {
+        if (!$this->commandeMenus->contains($commandeMenu)) {
+            $this->commandeMenus[] = $commandeMenu;
+            $commandeMenu->setMenu($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommandeMenu(CommandeMenu $commandeMenu): self
+    {
+        if ($this->commandeMenus->removeElement($commandeMenu)) {
+            // set the owning side to null (unless already changed)
+            if ($commandeMenu->getMenu() === $this) {
+                $commandeMenu->setMenu(null);
+            }
+        }
+
+        return $this;
     }
 }

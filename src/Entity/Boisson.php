@@ -8,6 +8,7 @@ use App\Repository\BoissonRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ApiResource(
     collectionOperations: ["get", "post"],
@@ -17,6 +18,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 #[ORM\Entity(repositoryClass: BoissonRepository::class)]
 class Boisson extends Produit
 {
+    //#[Groups(["Commande:write"])]
     #[ORM\OneToMany(mappedBy: 'boisson', targetEntity: TailleBoisson::class)]
     private $tailleBoissons;
 

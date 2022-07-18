@@ -43,44 +43,54 @@ class ProduitDataPersister implements ContextAwareDataPersisterInterface
     public function persist($data, array $context = [])
     {
 
-        if ($data instanceof Menu) {
+        if ($data instanceof Produit) {
+           // dd('ok');
+            if ($data instanceof Menu) {
+              //  dd($data->getMenuBurgers()[0]->getBurger()->getPrix());
 
+                foreach ($data->getMenuBurgers() as $burger) {
 
+                    $this->prix += $burger->getBurger()->getPrix();
+                    // dd($this->prix);
 
-            // dd($data->getMenuBurgers()[0]->getBurger()->getPrix());
-            foreach($data->getMenuBurgers() as $burger) {
+                }
+                // dd($data->getMenuBurgers()[0]->getBurger()->getPrix());
 
-                $this->prix += $burger->getBurger()->getPrix();
-                // dd($this->prix);
+                foreach ($data->getMenuPortionFrites() as $burgers) {
 
-            }
-// dd($data->getMenuBurgers()[0]->getBurger()->getPrix());
+                    $this->prix += $burgers->getPortionFrite()->getPrix();
+                    // dd($prix);
 
-            foreach ($data->getMenuPortionFrites() as $burgers) {
+                }
+                foreach ($data->getMenuTailles() as $burgers) {
 
-                $this->prix += $burgers->getPortionFrite()->getPrix();
+                    $this->prix += $burgers->getTaille()->getPrix();
+                    // dd($prix);
+
+                }
+
+                $data->setPrix($this->prix);
                 // dd($prix);
 
+                // $data->setPrix($prix);
+                //    dd($data->getBurgers())  ;
+                // $burgersMenu = $data->getMenuBurgers();
+                // // dd(count($burgersMenu));
+                // if (count($burgersMenu) == 0) {
+                //     dd('burgers forces');
+                // }
             }
-            foreach ($data->getMenuTailles() as $burgers) {
+            //  $image=file_get_contents($data->getImageFile();
+            //  $data->setImage($image));
+            //   if ($data->getImageFile()) {
+            //       $data->setImage(\file_get_contents($data->getImageFile()));
+            //   }
 
-                $this->prix += $burgers->getTaille()->getPrix();
-                // dd($prix);
-
-            }
-
-            $data->setPrix($this->prix);
-            // dd($prix);
-
-            // $data->setPrix($prix);
-            //    dd($data->getBurgers())  ;
-            // $burgersMenu = $data->getMenuBurgers();
-            // // dd(count($burgersMenu));
-            // if (count($burgersMenu) == 0) {
-            //     dd('burgers forces');
-            // }
         }
-        $this->_entityManager->persist($data);
+
+
+
+         $this->_entityManager->persist($data);
         $this->_entityManager->flush();
         //dd($this->tokenStorage->getToken()->getUser()); 
         $data->setGestionnaire($this->tokenStorage->getToken()->getUser());

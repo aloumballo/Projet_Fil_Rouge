@@ -6,26 +6,59 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ZoneRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\Response;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ApiResource]
+#[ApiResource(
+    collectionOperations: [
+        "get" => [
+            'method' => 'get',
+            'path' => '/users',
+            'status' => Response::HTTP_OK,
+            'normalization_context' => ['groups' => ["Zone"]],
+
+        ],
+        "post" => [
+            'denormalization_context' => ['groups' => ["Zone:wr"]],
+
+        ]
+    ],
+
+    itemOperations: [
+        "put" => [
+            // "security" => "is_granted('ROLE_GESTIONNAIRE')",
+            // "security" => "Vous n'avez pas access à cette Ressource",
+        ],
+        "get" => [
+            'method' => 'get',
+            'status' => Response::HTTP_OK,
+            'normalization_context' => ['groups' => ['Zone:all']],
+        ]
+    ]
+)]
 #[ORM\Entity(repositoryClass: ZoneRepository::class)]
 class Zone
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+
+    #[Groups(["Zone", "Zone:wr"])]
     private $id;
 
+    #[Groups(["Zone", "Zone:wr"])]
     #[ORM\Column(type: 'string', length: 20)]
     private $nom;
 
+    #[Groups(["Zone", "Zone:wr"])]
     #[ORM\Column(type: 'integer')]
     private $prix;
 
     #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Commande::class)]
     private $commandes;
 
+    #[Groups(["Zone", "Zone:wr","Commande:write"])]
     #[ORM\OneToMany(mappedBy: 'zone', targetEntity: Quartier::class)]
     private $quartiers;
 

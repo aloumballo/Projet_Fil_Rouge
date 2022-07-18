@@ -12,7 +12,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     collectionOperations: [
 
-        "get",
+        "get" => [
+            'denormalization_context' => ['groups' => ['wr']],
+        ],
 
         "post" => [
             'denormalization_context' => ['groups' => ['wri']],
@@ -25,15 +27,16 @@ class Taille
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
+    #[Groups(["Commande:write","write"])]
     #[ORM\Column(type: 'integer')]
     private $id;
 
     #[ORM\Column(type: 'integer')]
-    #[Groups(["wri", "wr","write"])]
+    #[Groups(["wri", "wr"])]
     private $prix;
 
     #[ORM\Column(type: 'string', length: 20)]
-    #[Groups(["wri", "wr","write"])]
+    #[Groups(["wri", "wr"])]
     private $libelle;
 
     // #[ORM\ManyToMany(targetEntity: Boisson::class, inversedBy: 'tailles')]

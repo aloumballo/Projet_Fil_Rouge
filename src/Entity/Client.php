@@ -27,15 +27,15 @@ class Client extends User
     #[ORM\Column(type: 'string', length: 20)]
     private $adresse;
 
-
-
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Commande::class)]
     private $commandes;
 
+
     public function __construct()
     {
-        $this->commandes = new ArrayCollection();
+     
         $this->setRoles(["ROLE_CLIENT"]);
+        $this->commandes = new ArrayCollection();
     }
 
     // public function getId(): ?int
@@ -84,4 +84,7 @@ class Client extends User
 
         return $this;
     }
+
+
+   
 }

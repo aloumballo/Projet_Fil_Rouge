@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\MenuPortionFritesRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: MenuPortionFritesRepository::class)]
 #[ApiResource(
@@ -34,6 +36,9 @@ class MenuPortionFrites
     // #[Groups(["write"])]
     private $menu;
 
+    #[Assert\Positive(
+        message: 'la quantite doit etre positive wane'
+    )]
     #[ORM\Column(type: 'integer')]
     #[Groups(["write"])]
     private $quantite;

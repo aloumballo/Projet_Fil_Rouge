@@ -13,17 +13,24 @@ class TailleBoisson
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
+    #[Groups(["Commande:write"])]
     #[ORM\Column(type: 'integer')]
     private $id;
 
+   
     #[ORM\Column(type: 'float')]
     private $quantite;
 
+    // #[Groups(["Commande:write"])]
     #[ORM\ManyToOne(targetEntity: Boisson::class, inversedBy: 'tailleBoissons')]
     private $boisson;
 
+    // #[Groups(["Commande:write"])]
     #[ORM\ManyToOne(targetEntity: Taille::class, inversedBy: 'tailleBoissons')]
     private $taille;
+
+    #[ORM\ManyToOne(targetEntity: CommandeTailleBoisson::class, inversedBy: 'tailleBoissons')]
+    private $commandeTailleBoisson;
 
     // #[ORM\ManyToOne(targetEntity: Boisson::class, inversedBy: 'tailleBoissons')]
     // private $boisson;
@@ -92,6 +99,18 @@ class TailleBoisson
     public function setTaille(?Taille $taille): self
     {
         $this->taille = $taille;
+
+        return $this;
+    }
+
+    public function getCommandeTailleBoisson(): ?CommandeTailleBoisson
+    {
+        return $this->commandeTailleBoisson;
+    }
+
+    public function setCommandeTailleBoisson(?CommandeTailleBoisson $commandeTailleBoisson): self
+    {
+        $this->commandeTailleBoisson = $commandeTailleBoisson;
 
         return $this;
     }

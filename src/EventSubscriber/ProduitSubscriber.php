@@ -54,6 +54,7 @@ class ProduitSubscriber implements EventSubscriberInterface
             
             
             $args->getObject()->setGestionnaire($this->getUser());
+         //   dd($args->getObject()->setGestionnaire($this->getUser()));
 
             //$args->getObject()->setUser($this->getUser());
         }
