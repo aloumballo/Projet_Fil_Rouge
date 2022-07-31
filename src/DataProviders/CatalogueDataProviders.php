@@ -3,12 +3,13 @@
 
 namespace App\DataProviders;
 
-use App\Entity\Catalogue;
-use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
-use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
+
+use App\Entity\Dto\Catalogue;
+use App\Repository\MenuRepository;
 
 use App\Repository\BurgerRepository;
-use App\Repository\MenuRepository;
+use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
+use ApiPlatform\Core\DataProvider\ContextAwareCollectionDataProviderInterface;
 
 final class  CatalogueDataProviders implements ContextAwareCollectionDataProviderInterface, RestrictedDataProviderInterface
 {

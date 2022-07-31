@@ -36,6 +36,7 @@ class MenuBurgers
     #[Groups(["Burger:read:all", "write", "Burger:read:simple"])]
     private $quantite;
 
+   
     #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuBurgers')]
     private $menu;
 

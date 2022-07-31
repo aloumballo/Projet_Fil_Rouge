@@ -1,15 +1,29 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\Dto;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\CatalogueRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Entity\Menu;
+use App\Entity\Burger;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CatalogueRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\Response;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 // #[ORM\Entity(repositoryClass: CatalogueRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations: [
+        "get" => [
+            'method' => 'get',
+            'path' => '/catalogues',
+            'status' => Response::HTTP_OK,
+            "normalization_context" => ["groups" => ["catalogue:read"]],
+        ],
+
+    ],
+)]
 class Catalogue
 {
     // #[ORM\Id]
@@ -18,9 +32,11 @@ class Catalogue
     private $id;
 
     // #[ORM\OneToMany(mappedBy: 'catalogue', targetEntity: Menu::class)]
+    #[Groups(["catalogue:read"])]
     private $menus;
 
     // #[ORM\OneToMany(mappedBy: 'catalogue', targetEntity: Burger::class)]
+    #[Groups(["catalogue:read"])]
     private $burgers;
 
     // public function __construct()

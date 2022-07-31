@@ -32,6 +32,7 @@ class MenuPortionFrites
     // #[Groups(["write"])]
     // private $quantite;
 
+   
     #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuPortionFrites')]
     // #[Groups(["write"])]
     private $menu;

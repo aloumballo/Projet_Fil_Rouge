@@ -13,11 +13,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ApiResource(
-    
+
     collectionOperations: [
-        
-        "get",
-        
+
+        "get" => [
+            'normalization_context' => ['groups' => ["menu:read:simple"]],
+
+        ],
+
         "post" => [
             'denormalization_context' => ['groups' => ['write']],
         ]
@@ -49,17 +52,17 @@ class Menu extends Produit
         minMessage: 'Au moins un burger !!!'
     )]
     #[Assert\Valid()]
-    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBurgers::class,cascade:["persist"])]
-    #[Groups(["write"])]
-     private $menuBurgers;
+    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuBurgers::class, cascade: ["persist"])]
+    #[Groups(["Burger:read:all", "write", "Burger:read:simple", 'Produitt', "menu:read:simple", "Produit", "prod"])]
+    private $menuBurgers;
 
     #[Assert\Valid()]
-    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuTaille::class,cascade: ["persist"])]
-    #[Groups(["write"])]
+    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuTaille::class, cascade: ["persist"])]
+    #[Groups(["write", "Produit", "prod"])]
     private $menuTailles;
 
-    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuPortionFrites::class,cascade: ["persist"])]
-    #[Groups(["write"])]
+    #[ORM\OneToMany(mappedBy: 'menu', targetEntity: MenuPortionFrites::class, cascade: ["persist"])]
+    #[Groups(["write", "Produit", "prod"])]
     private $menuPortionFrites;
 
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'menus')]
@@ -67,7 +70,7 @@ class Menu extends Produit
 
     //  #[ORM\ManyToOne(targetEntity: CommandeMenu::class, inversedBy: 'menus')]
     //  private $commandeMenu;
-    
+
     #[ORM\OneToMany(mappedBy: 'menu', targetEntity: CommandeMenu::class)]
     private $commandeMenus;
 
@@ -82,9 +85,9 @@ class Menu extends Produit
     public function __construct()
     {
 
-       
 
-       
+
+
         // $this->complements = new ArrayCollection();
         // $this->burgers = new ArrayCollection();
         // $this->boissons = new ArrayCollection();
@@ -92,9 +95,6 @@ class Menu extends Produit
         $this->menuTailles = new ArrayCollection();
         $this->menuPortionFrites = new ArrayCollection();
         $this->commandeMenus = new ArrayCollection();
-
-
-       
     }
 
     // public function getId(): ?int
@@ -298,9 +298,9 @@ class Menu extends Produit
     public function validate(ExecutionContextInterface $context, $payload)
     {
 
-        if (count($this->getMenuTailles())==0 && count($this->getMenuPortionFrites()) == 0) {
+        if (count($this->getMenuTailles()) == 0 && count($this->getMenuPortionFrites()) == 0) {
             $context->buildViolation('saisir au moins un complement')
-                 ->addViolation();
+                ->addViolation();
         }
     }
 

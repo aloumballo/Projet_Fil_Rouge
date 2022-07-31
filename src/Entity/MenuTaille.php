@@ -35,6 +35,8 @@ class MenuTaille
     #[Groups(["wr", "write"])]
     private $taille;
 
+
+   
     #[ORM\ManyToOne(targetEntity: Menu::class, inversedBy: 'menuTailles',cascade: ["persist"])]
     private $menu;
 

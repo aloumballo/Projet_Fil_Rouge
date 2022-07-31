@@ -58,8 +58,9 @@ class PersisterData implements ContextAwareDataPersisterInterface
             }
             $this->send->email($data);
         }
+       // or $data instanceof Menu
 
-        if ($data instanceof Produit or $data instanceof Menu) {
+        if ($data instanceof Produit or $data instanceof Menu ) {
 
 
             $data->setImage(\file_get_contents($data->getImageFile()));

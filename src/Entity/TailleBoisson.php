@@ -17,7 +17,7 @@ class TailleBoisson
     #[ORM\Column(type: 'integer')]
     private $id;
 
-   
+    //#[Groups(["Produit"])]
     #[ORM\Column(type: 'float')]
     private $quantite;
 

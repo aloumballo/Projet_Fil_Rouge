@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Produit;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;

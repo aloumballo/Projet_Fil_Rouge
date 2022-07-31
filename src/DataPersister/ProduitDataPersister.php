@@ -3,22 +3,25 @@
 
 namespace App\DataPersister;
 
+use App\Entity\Menu;
 use App\Entity\User;
+use App\Entity\Burger;
+use App\Entity\Produit;
 use App\Service\SendEmail;
 use Doctrine\ORM\EntityManagerInterface;
+use ApiPlatform\Core\DataPersister\DataPersisterInterface;
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
-use App\Entity\Burger;
-use App\Entity\Menu;
-use App\Entity\Produit;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  *
  */
-class ProduitDataPersister implements ContextAwareDataPersisterInterface
+//dd("ok");
+
+class ProduitDataPersister implements DataPersisterInterface
 {
     private $_entityManager;
     private $tokenStorage;
@@ -43,15 +46,16 @@ class ProduitDataPersister implements ContextAwareDataPersisterInterface
     public function persist($data, array $context = [])
     {
 
+        
         if ($data instanceof Produit) {
-           // dd('ok');
+            // dd('ok');
             if ($data instanceof Menu) {
-              //  dd($data->getMenuBurgers()[0]->getBurger()->getPrix());
+                // dd($data->getMenuBurgers()[0]->getBurger()->getPrix());
 
                 foreach ($data->getMenuBurgers() as $burger) {
 
                     $this->prix += $burger->getBurger()->getPrix();
-                    // dd($this->prix);
+                    //dd($this->prix);
 
                 }
                 // dd($data->getMenuBurgers()[0]->getBurger()->getPrix());
@@ -79,18 +83,17 @@ class ProduitDataPersister implements ContextAwareDataPersisterInterface
                 // if (count($burgersMenu) == 0) {
                 //     dd('burgers forces');
                 // }
+                // }
+                //  $image=file_get_contents($data->getImageFile();
+                //  $data->setImage($image));
+                //   if ($data->getImageFile()) {
+                //       $data->setImage(\file_get_contents($data->getImageFile()));
             }
-            //  $image=file_get_contents($data->getImageFile();
-            //  $data->setImage($image));
-            //   if ($data->getImageFile()) {
-            //       $data->setImage(\file_get_contents($data->getImageFile()));
-            //   }
-
         }
 
 
 
-         $this->_entityManager->persist($data);
+        $this->_entityManager->persist($data);
         $this->_entityManager->flush();
         //dd($this->tokenStorage->getToken()->getUser()); 
         $data->setGestionnaire($this->tokenStorage->getToken()->getUser());

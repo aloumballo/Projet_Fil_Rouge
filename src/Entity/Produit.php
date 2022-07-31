@@ -16,7 +16,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 
+use function PHPSTORM_META\type;
+
 #[ApiResource(
+   
     collectionOperations: [
         "get" => [
             'method' => 'get',
@@ -25,6 +28,7 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
             'normalization_context' => ['groups' => ["Produit"]],
 
         ],
+
         "post" => [
             "security" => "is_granted('ROLE_GESTIONNAIRE')",
 
@@ -38,13 +42,12 @@ use Symfony\Component\Serializer\Annotation\SerializedName;
         "put" => [
 
             "security" => "is_granted('ROLE_GESTIONNAIRE')",
-
             "security_message" => "Vous n'avez pas access à cette Ressource",
         ],
         "get" => [
             'method' => 'get',
             'status' => Response::HTTP_OK,
-            'normalization_context' => ['groups' => ['Produit:all']],
+            'normalization_context' => ['groups' => ['Produit:all', 'Produit', "type"]],
         ]
     ]
 )]
@@ -66,11 +69,11 @@ class Produit
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    #[Groups(['Burger:read:simple', 'Burger:read:all', 'write', 's:write', "Commande:write"])]
+    #[Groups(['Burger:read:simple', 'Burger:read:all', 'write', 's:write', "Commande:write", "catalogue:read", "Produit", "prod"])]
     protected $id;
 
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
-    #[Groups(['Burger:read:simple', 'write', 'Burger:read:all', 's:write', 'Produitt'])]
+    #[Groups(['Burger:read:simple', 'write', 'Burger:read:all', 's:write', 'Produitt', "catalogue:read", "Produit", "menu:read:simple", "prod"])]
     protected $nom;
 
     // #[ORM\Column(type: 'string', length: 20, nullable: true)]
@@ -78,21 +81,22 @@ class Produit
     // protected $image;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups(['Burger:read:simple','Burger:read:all', 's:write', 'Produitt'])]
+    #[Groups(['Burger:read:simple', 'Burger:read:all', 's:write', 'Produitt', "catalogue:read", "Produit", "menu:read:simple", "prod"])]
     protected $prix;
 
     // #[ORM\ManyToMany(targetEntity: Commande::class, mappedBy: 'produits')]
     // private $commandes;
 
     #[ORM\Column(type: 'boolean')]
-    #[Groups(['Burger:read:simple', 'Produitt'])]
+    #[Groups(['Burger:read:simple', 'Produitt', "prod"])]
     protected $isEtat = true;
 
-    #[Groups(['Produit', 'Produitt', 'Produit:simple'])]
+    #[Groups(['Produitt', 'Produit:simple',])]
     #[ORM\ManyToOne(targetEntity: Gestionnaire::class, inversedBy: 'produits')]
     private $gestionnaire;
 
-    //#[Groups(['Burger:read:simple', 'write', 'Burger:read:all', 's:write', 'Produitt'])]
+    //#[Groups(['Burger:read:simple', 'write', 'Burger:read:all', 's:write', 'Produitt',])]
+    #[Groups(['catalogue:read', "Produit", "menu:read:simple", "menu:read:simple", "prod"])]
     #[ORM\Column(type: 'blob', nullable: true)]
     private $image;
 
@@ -102,6 +106,9 @@ class Produit
     #[Groups(['Produitt', 'write'])]
     #[SerializedName("image")]
     private $imageFile;
+
+    #[Groups(["Produit", "prod"])]
+    private $letype;
 
 
     // #[ORM\OneToMany(mappedBy: 'produit', targetEntity: ProduitCommande::class)]
@@ -259,6 +266,29 @@ class Produit
     public function setImageFile(?string $imageFile): self
     {
         $this->imageFile = $imageFile;
+
+        return $this;
+    }
+
+
+
+    /**
+     * Get the value of letype
+     */
+    public function getLetype()
+    {
+        $str = strtolower(get_called_class() . "s");
+        return str_replace('app\\entity\\', "", $str);
+    }
+
+    /**
+     * Set the value of letype
+     *
+     * @return  self
+     */
+    public function setLetype($letype)
+    {
+        $this->letype = $letype;
 
         return $this;
     }

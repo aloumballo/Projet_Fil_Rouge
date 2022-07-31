@@ -8,3 +8,6 @@ api_platform:
   collection:
     pagination:
       items_per_page: 10
+  formats:
+    json:
+     mime_types: ["application/json"]
