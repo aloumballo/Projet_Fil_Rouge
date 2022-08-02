@@ -73,7 +73,7 @@ class Produit
     protected $id;
 
     #[ORM\Column(type: 'string', length: 20, nullable: true)]
-    #[Groups(['Burger:read:simple', 'write', 'Burger:read:all', 's:write', 'Produitt', "catalogue:read", "Produit", "menu:read:simple", "prod"])]
+    #[Groups(['Burger:read:simple', 'write', 'Burger:read:all', 's:write', 'Produitt', "catalogue:read", "Produit", "menu:read:simple", "prod", "details"])]
     protected $nom;
 
     // #[ORM\Column(type: 'string', length: 20, nullable: true)]
@@ -81,7 +81,7 @@ class Produit
     // protected $image;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    #[Groups(['Burger:read:simple', 'Burger:read:all', 's:write', 'Produitt', "catalogue:read", "Produit", "menu:read:simple", "prod"])]
+    #[Groups(['Burger:read:simple', 'Burger:read:all', 's:write', 'Produitt', "catalogue:read", "Produit", "menu:read:simple", "prod", "details"])]
     protected $prix;
 
     // #[ORM\ManyToMany(targetEntity: Commande::class, mappedBy: 'produits')]
@@ -96,7 +96,7 @@ class Produit
     private $gestionnaire;
 
     //#[Groups(['Burger:read:simple', 'write', 'Burger:read:all', 's:write', 'Produitt',])]
-    #[Groups(['catalogue:read', "Produit", "menu:read:simple", "menu:read:simple", "prod"])]
+    #[Groups(['catalogue:read', "Produit", "menu:read:simple", "menu:read:simple", "prod", "details"])]
     #[ORM\Column(type: 'blob', nullable: true)]
     private $image;
 

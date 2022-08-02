@@ -41,7 +41,7 @@ class MenuPortionFrites
         message: 'la quantite doit etre positive wane'
     )]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["write"])]
+    #[Groups(["write", "details"])]
     private $quantite;
 
     #[ORM\ManyToOne(targetEntity: PortionFrite::class, inversedBy: 'menuPortionFrites', cascade:["persist"])]

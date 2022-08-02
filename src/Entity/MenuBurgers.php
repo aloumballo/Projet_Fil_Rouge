@@ -33,7 +33,7 @@ class MenuBurgers
         message: 'la quantite doit etre positive wane'
     )]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["Burger:read:all", "write", "Burger:read:simple"])]
+    #[Groups(["Burger:read:all", "write", "Burger:read:simple", "details"])]
     private $quantite;
 
    

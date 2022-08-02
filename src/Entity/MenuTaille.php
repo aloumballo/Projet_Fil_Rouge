@@ -44,7 +44,7 @@ class MenuTaille
         message: 'la quantite doit etre positive wane'
     )]
     #[ORM\Column(type: 'integer')]
-    #[Groups(["wr", "write"])]
+    #[Groups(["wr", "write", "details"])]
     private $quantite;
 
     public function getId(): ?int
